@@ -150,8 +150,8 @@ vim.o.splitbelow = true
 --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
 --   See `:help lua-options`
 --   and `:help lua-options-guide`
-vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.o.list = true
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -680,6 +680,11 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+      --Enable (broadcasting) snippet capability for completion
+      capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
       local servers = {
         -- clangd = {},
         clangd = {},
@@ -688,7 +693,46 @@ require('lazy').setup({
         pyright = {},
         -- rust_analyzer = {},
         rust_analyzer = {},
+        -- rust_analyzer = {
+        --   on_attach = function(client, bufnr)
+        --     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        --   end,
+        --   settings = {
+        --     ['rust-analyzer'] = {
+        --       imports = {
+        --         granularity = {
+        --           group = 'module',
+        --         },
+        --         prefix = 'self',
+        --       },
+        --       cargo = {
+        --         buildScripts = {
+        --           enable = true,
+        --         },
+        --       },
+        --       procMacro = {
+        --         enable = true,
+        --       },
+        --     },
+        --   },
+        -- },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+        -- solidity = {},
+        -- solidity_ls = {},
+        solc = {},
+        -- solc = {
+        --   cmd={ "solc", "--lsp" },
+        --   filetypes = { "solidity" },
+        -- },
+        cssls = {
+          capabilities = capabilities,
+        },
+        html = {
+          capabilities = capabilities,
+        },
+        jsonls = {
+          capabilities = capabilities,
+        },
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -868,7 +912,7 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'buffer','path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'buffer', 'path', 'snippets', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         },
@@ -920,6 +964,15 @@ require('lazy').setup({
       vim.cmd [[ colorscheme NeoSolarized ]]
     end,
   },
+  {
+    'brianhuster/live-preview.nvim',
+    --    dependencies = {
+    --        -- You can choose one of the following pickers
+    --        'nvim-telescope/telescope.nvim',
+    --        'ibhagwan/fzf-lua',
+    --        'echasnovski/mini.pick',
+    --    },
+  },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -964,7 +1017,7 @@ require('lazy').setup({
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config=function()
+    config = function()
       require('lualine').setup()
     end,
   },
@@ -1004,7 +1057,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
