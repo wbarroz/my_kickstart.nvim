@@ -1021,6 +1021,21 @@ require('lazy').setup({
       require('lualine').setup()
     end,
   },
+  {
+    'stevearc/oil.nvim',
+    -- dependencies = {
+    -- },
+  },
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- required
+      'sindrets/diffview.nvim', -- optional - Diff integration
+
+      -- Only one of these is needed.
+      'nvim-telescope/telescope.nvim', -- optional
+    },
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
